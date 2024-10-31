@@ -56,7 +56,12 @@ module opermux(
             4'b1001: Y = ~(A | B);       
             4'b1010: Y = ~(A ^ B);        
             4'b1011: Y = ~A;             
-            4'b1100: Y = -A;              // Two's Complement (Negate A)
+            4'b1100: begin
+                twos_compliment Atwos(
+                    .A(A[7:0]),
+                    .Y(Y[7:0])
+                )
+            end              // Two's Complement (Negate A)
             4'b1101: A = Y;               
             4'b1110: begin                
                 tmp = A;
