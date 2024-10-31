@@ -39,6 +39,8 @@ wire [7:0] LOAD;   // Load from input
 wire [7:0] A;
 wire [7:0] B;
 
+// Register Here
+
 // Multiplexor for the output operation
 opermux operselect(
     // Operation Results
