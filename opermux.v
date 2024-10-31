@@ -31,7 +31,7 @@ module opermux(
                 );
             end          
             4'b0001: begin                // Subtraction 2 Comp
-                adder add(
+                subtract sub(
                     .A(A[7:0]),
                     .B(B[7:0]),
                     .Y(y[7:0])
@@ -60,7 +60,7 @@ module opermux(
                 twos_compliment Atwos(
                     .A(A[7:0]),
                     .Y(Y[7:0])
-                )
+                );
             end              // Two's Complement (Negate A)
             4'b1101: A = Y;               
             4'b1110: begin                
