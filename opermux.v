@@ -10,6 +10,8 @@ reg [7:0] B;
 
 wire tmp [7:0];
 
+
+
 always @(selector) begin
 
     A <= 0
