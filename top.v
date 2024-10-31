@@ -9,66 +9,30 @@ module top(
     output Y[7:0]
 );
 
-// Arithmetic Operations
-wire [7:0] ADD;    // Addition
-wire [7:0] SUB;    // Subtraction
-wire [7:0] NEG;    // Two's Complement
+wire enable = btnC;
+wire reset = btnU;
 
-// Shift Operations
-wire [7:0] SHL;    // Shift Left
-wire [7:0] SHR;    // Shift Right
 
-// Comparison
-wire [7:0] CMP;    // Compare A and B
-
-// Logic Operations
-wire [7:0] AND;    // Bitwise AND
-wire [7:0] OR;     // Bitwise OR
-wire [7:0] XOR;    // Bitwise XOR
-wire [7:0] NAND;   // Bitwise NAND
-wire [7:0] NOR;    // Bitwise NOR
-wire [7:0] XNOR;   // Bitwise XNOR
-wire [7:0] INV;    // Bitwise NOT (Invert)
-
-// Data Movement Operations
-wire [7:0] STO;    // Store to A
-wire [7:0] SWP;    // Swap A and B
-wire [7:0] LOAD;   // Load from input
-
-// Tempory A and B
-wire [7:0] A;
-wire [7:0] B;
-
-// Register Here
+clock_div  clk_div(
+        .clock(clk),
+        .reset(reset),
+        .div_clock(div_clock)
+    );
 
 // Multiplexor for the output operation
 opermux operselect(
-    // Operation Results
-    .ADD(ADD),      // Result from adder
-    .SUB(SUB),      // Result from subtractor
-    .SHL(SHL),      // Result from shift left
-    .SHR(SHR),      // Result from shift right
-    .CMP(CMP),      // Result from comparator
-    .AND(AND),      // Result from AND
-    .OR(OR),        // Result from OR
-    .XOR(XOR),      // Result from XOR
-    .NAND(NAND),    // Result from NAND
-    .NOR(NOR),      // Result from NOR
-    .XNOR(XNOR),    // Result from XNOR
-    .INV(INV),      // Result from NOT
-    .NEG(NEG),      // Result from Two's Complement
-    .STO(STO),      // Result from Store operation
-    .SWP(SWP),      // Result from Swap operation
-    .LOAD(LOAD),    // Result from Load operation
-    .A(A),
-    .B(B),
-    .Sel(sw[3:0]),
-    .Y(Y)
+    .data_in(sw[15:8]),
+    .selector(sw[3:0]),
+    .reset(reset);
+    .enable(enable)
+    .Y(),
+    .ALed([15:8]),
+    .BLed([7:0]),
+
 );
 
 // Need to implement the following:
-// - Blank Register for A and B
-// - Button that, when hit, goes through with the operation 
+
 // - displays on seven segment
 // - Reset
 

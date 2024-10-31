@@ -1,7 +1,7 @@
 module opermux(
     input signed [7:0] data_in,     // Signed 8-bit input data for loading or storing in A
     input [3:0] selector,           // 4-bit selector for ALU operation
-    input reset,                    // Reset signal to zero all registers
+    input reset,  enable                   // Reset signal to zero all registers
     output reg signed [7:0] Y,      // Signed 8-bit output for result
     output reg signed [7:0] ALed,   // Signed 8-bit LED output for register A
     output reg signed [7:0] BLed    // Signed 8-bit LED output for register B
@@ -20,7 +20,7 @@ module opermux(
     end
 
     // ALU operation based on selector
-    always @(selector or A or B or data_in) begin
+    always @(enable) begin
         case(selector)
             4'b0000: Y = A + B;           // Addition Adder
             4'b0001: Y = A - B;           // Subtraction 2 Comp
@@ -54,7 +54,7 @@ module opermux(
               
         endcase
 
-        // Reflect A and B on ALed and BLed
+        
         ALed = A;
         BLed = B;
     end
