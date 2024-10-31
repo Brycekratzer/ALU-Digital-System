@@ -1,5 +1,5 @@
 module opermux(
-    input [7:0] ADD, SUB, SHL, SHR, CMP, AND, OR, XOR, NAND, NOR, XNOR, INV, NEG, STO, SWP, LOAD,
+    input [7:0] ADD, SUB, SHL, SHR, CMP, AND, OR, XOR, NAND, NOR, XNOR, INV, NEG, STO, SWP, LOAD, A, B,
     input selector[3:0],
     output reg Y[7:0]
 );
@@ -27,3 +27,14 @@ end
 // case select or if else statments for each different operation?
 
 endmodule
+
+module andoper(
+    input [7:0] A,B,
+    output [7:0] And
+)
+
+assign And = A & B;
+
+endmodule
+
+module or

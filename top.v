@@ -35,6 +35,10 @@ wire [7:0] STO;    // Store to A
 wire [7:0] SWP;    // Swap A and B
 wire [7:0] LOAD;   // Load from input
 
+// Tempory A and B
+wire [7:0] A;
+wire [7:0] B;
+
 // Multiplexor for the output operation
 opermux operselect(
     // Operation Results
@@ -54,6 +58,8 @@ opermux operselect(
     .STO(STO),      // Result from Store operation
     .SWP(SWP),      // Result from Swap operation
     .LOAD(LOAD),    // Result from Load operation
+    .A(A),
+    .B(B),
     .Sel(sw[3:0]),
     .Y(Y)
 );
