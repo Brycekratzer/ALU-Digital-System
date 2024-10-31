@@ -50,8 +50,8 @@ module opermux(
                 A = B;
                 B = tmp;
             end
-            4'b1111: A = data_in;         // Load data_in into A
-            default: Y = 8'sd0;           // Default case (optional)
+            4'b1111: A = data_in;       
+              
         endcase
 
         // Reflect A and B on ALed and BLed
