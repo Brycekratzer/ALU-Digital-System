@@ -13,6 +13,25 @@ module opermux(
     reg [7:0] B;
     reg [7:0] tmp;
 
+    wire reg [7:0] A_twoscomp;
+    wire reg [7:0] A_sub;
+    wire reg [7:0] A_add;
+
+    twos_compliment Atwo(
+        .A(A[7:0]),
+        .Y(A_twoscomp[7:0])
+    );
+
+    adder add(
+        .A(A[7:0]),
+        .Y(A_add[7:0])
+    );
+
+    subtract sub(
+        .A(A[7:0]),
+        .Y(A_sub[7:0])
+    );
+
     // Reset all registers to zero
     always @(posedge reset) begin
         A <= 8'sd0;
@@ -23,23 +42,10 @@ module opermux(
     // ALU operation based on selector
     always @(enable) begin
         case(selector)
-            4'b0000: begin                
-                adder add(
-                    .A(A[7:0]),
-                    .B(B[7:0]),
-                    .Y(y[7:0])
-                );
-            end          
-            4'b0001: begin                
-                subtract sub(
-                    .A(A[7:0]),
-                    .B(B[7:0]),
-                    .Y(y[7:0])
-                );   
-            end                           
+            4'b0000: Y = A_add// Add          
+            4'b0001: Y = A_sub// Sub                          
             4'b0010: Y = A <<< 1;      
             4'b0011: Y = A >>> 1;         
-
             4'b0100: begin              
                 if (A == B) 
                     Y = 8'sd0;            
@@ -48,7 +54,6 @@ module opermux(
                 else 
                     Y = -8'sd1;           
             end
-            
             4'b0101: Y = A & B;           
             4'b0110: Y = A | B;          
             4'b0111: Y = A ^ B;           
@@ -56,23 +61,19 @@ module opermux(
             4'b1001: Y = ~(A | B);       
             4'b1010: Y = ~(A ^ B);        
             4'b1011: Y = ~A;             
-            4'b1100: begin
-                twos_compliment Atwos(
-                    .A(A[7:0]),
-                    .Y(Y[7:0])
-                );
-            end              // Two's Complement (Negate A)
+            4'b1100: Y = A_twos;// Two's Complement (Negate A)
             4'b1101: A = Y;               
             4'b1110: begin                
                 tmp = A;
                 A = B;
                 B = tmp;
             end
-            4'b1111: A = data_in;       
-              
+            4'b1111: begin
+                temp = A;
+                A = data_in; 
+                B = temp;
+            end
         endcase
-
-        
         ALed = A;
         BLed = B;
     end

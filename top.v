@@ -27,11 +27,11 @@ opermux operselect(
     .selector(sw[3:0]),
     .reset(reset),
     .enable(enable)
-    .Y(Yinput),
-    .ALed([15:8]),
-    .BLed([7:0]),
-
+    .Y(Yinput[7:0]),
+    .ALed(led[15:8]),
+    .BLed(led[7:0]),
 );
+
 seven_seg_scanner seven_scan(
     .div_clock(div_clock),
     .reset(reset),
@@ -39,12 +39,12 @@ seven_seg_scanner seven_scan(
 );
 seven_seg_decoder decoderSeg(
     .anode(an[3:0]),
-    .YInput(Yinput),
+    .YInput(Yinput[7:0]),
     .segs(seg[6:0]),
     .operation(sw[3:0])
 )
 
 // Need to implement the following:
-//D Latch for memory
+//  - 
     
 endmodule
