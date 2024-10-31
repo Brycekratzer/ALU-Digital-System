@@ -22,8 +22,20 @@ module opermux(
     // ALU operation based on selector
     always @(enable) begin
         case(selector)
-            4'b0000: Y = A + B;           // Addition Adder
-            4'b0001: Y = A - B;           // Subtraction 2 Comp
+            4'b0000: begin                // Addition Adder
+                adder add(
+                    .A(A[7:0]),
+                    .B(B[7:0]),
+                    .Y(y[7:0])
+                );
+            end          
+            4'b0001: begin                // Subtraction 2 Comp
+                adder add(
+                    .A(A[7:0]),
+                    .B(B[7:0]),
+                    .Y(y[7:0])
+                );   
+            end                           
             4'b0010: Y = A <<< 1;      
             4'b0011: Y = A >>> 1;         
 
