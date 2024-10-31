@@ -11,6 +11,7 @@ module top(
 
 wire enable = btnC;
 wire reset = btnU;
+wire div_clock;
 
 
 clock_div  clk_div(
@@ -30,6 +31,16 @@ opermux operselect(
     .BLed([7:0]),
 
 );
+seven_seg_scanner seven_scan(
+    .div_clock(div_clock),
+    .reset(reset),
+    .anode(an[3:0])
+);
+seven_seg_decoder decoderSeg(
+    .anode(an[3:0]),
+    .segs(seg[6:0]),
+    .operation(sw[3:0])
+)
 
 // Need to implement the following:
 
