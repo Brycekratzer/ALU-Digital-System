@@ -12,21 +12,22 @@ module top(
 wire enable = btnC;
 wire reset = btnU;
 wire div_clock;
+wire [7:0] Yinput;
 
 
 clock_div  clk_div(
-        .clock(clk),
-        .reset(reset),
-        .div_clock(div_clock)
-    );
+    .clock(clk),
+    .reset(enable),
+    .div_clock(div_clock)
+);
 
 // Multiplexor for the output operation
 opermux operselect(
     .data_in(sw[15:8]),
     .selector(sw[3:0]),
-    .reset(reset);
+    .reset(reset),
     .enable(enable)
-    .Y(),
+    .Y(Yinput),
     .ALed([15:8]),
     .BLed([7:0]),
 
@@ -38,16 +39,12 @@ seven_seg_scanner seven_scan(
 );
 seven_seg_decoder decoderSeg(
     .anode(an[3:0]),
+    .YInput(Yinput),
     .segs(seg[6:0]),
     .operation(sw[3:0])
 )
 
 // Need to implement the following:
-
-// - displays on seven segment
-// - Reset
-
-
-// NOTES:  Start with 2 registers, A[7:0] and B[7:0]. These will need to be reset using btnU
+//D Latch for memory
     
 endmodule

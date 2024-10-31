@@ -23,14 +23,14 @@ module opermux(
     // ALU operation based on selector
     always @(enable) begin
         case(selector)
-            4'b0000: begin                // Addition Adder
+            4'b0000: begin                
                 adder add(
                     .A(A[7:0]),
                     .B(B[7:0]),
                     .Y(y[7:0])
                 );
             end          
-            4'b0001: begin                // Subtraction 2 Comp
+            4'b0001: begin                
                 subtract sub(
                     .A(A[7:0]),
                     .B(B[7:0]),
