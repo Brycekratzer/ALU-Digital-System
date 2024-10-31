@@ -1,7 +1,8 @@
 module opermux(
     input signed [7:0] data_in,     // Signed 8-bit input data for loading or storing in A
     input [3:0] selector,           // 4-bit selector for ALU operation
-    input reset,  enable                   // Reset signal to zero all registers
+    input reset,  
+    input enable,                  // Reset signal to zero all registers
     output reg signed [7:0] Y,      // Signed 8-bit output for result
     output reg signed [7:0] ALed,   // Signed 8-bit LED output for register A
     output reg signed [7:0] BLed    // Signed 8-bit LED output for register B
