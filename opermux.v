@@ -22,30 +22,30 @@ module opermux(
     // ALU operation based on selector
     always @(selector or A or B or data_in) begin
         case(selector)
-            4'b0000: Y = A + B;           // Addition
-            4'b0001: Y = A - B;           // Subtraction
-            4'b0010: Y = A <<< 1;         // Signed shift left
-            4'b0011: Y = A >>> 1;         // Signed arithmetic shift right
+            4'b0000: Y = A + B;           // Addition Adder
+            4'b0001: Y = A - B;           // Subtraction 2 Comp
+            4'b0010: Y = A <<< 1;      
+            4'b0011: Y = A >>> 1;         
 
-            4'b0100: begin                // Comparison
+            4'b0100: begin              
                 if (A == B) 
-                    Y = 8'sd0;            // Y = 0 if A == B
+                    Y = 8'sd0;            
                 else if (A > B) 
-                    Y = 8'sd1;            // Y = 1 if A > B
+                    Y = 8'sd1;           
                 else 
-                    Y = -8'sd1;           // Y = -1 if A < B
+                    Y = -8'sd1;           
             end
             
-            4'b0101: Y = A & B;           // Bitwise AND
-            4'b0110: Y = A | B;           // Bitwise OR
-            4'b0111: Y = A ^ B;           // Bitwise XOR
-            4'b1000: Y = ~(A & B);        // Bitwise NAND
-            4'b1001: Y = ~(A | B);        // Bitwise NOR
-            4'b1010: Y = ~(A ^ B);        // Bitwise XNOR
-            4'b1011: Y = ~A;              // Bitwise NOT
+            4'b0101: Y = A & B;           
+            4'b0110: Y = A | B;          
+            4'b0111: Y = A ^ B;           
+            4'b1000: Y = ~(A & B);        
+            4'b1001: Y = ~(A | B);       
+            4'b1010: Y = ~(A ^ B);        
+            4'b1011: Y = ~A;             
             4'b1100: Y = -A;              // Two's Complement (Negate A)
-            4'b1101: A = Y;               // Store Y in A
-            4'b1110: begin                // Swap A and B
+            4'b1101: A = Y;               
+            4'b1110: begin                
                 tmp = A;
                 A = B;
                 B = tmp;
