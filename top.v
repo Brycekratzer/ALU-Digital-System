@@ -10,8 +10,10 @@ module top(
 );
 
 // Internal wires
+wire enable = btnC;
+wire reset = btnU;
 wire [7:0] reg_A_out, reg_B_out, reg_Y_out;
-wire enable_A, enable_B, enable_Y;
+
 wire [7:0] operation_result;
 wire div_clock;
 
@@ -21,66 +23,21 @@ clock_div clk_div(
     .div_clock(div_clock)
 );
 
-// Instantiate controller
-alu_controller controller (
-    .clk(div_clock),
-    .reset(reset),
-    .btn_execute(btn_execute),
-    .operation(operation),
-    .enable_A(enable_A),
-    .enable_B(enable_B),
-    .enable_Y(enable_Y)
-);
-
-// Instantiate registers
-register_8bit reg_A (
-    .clk(div_clock),
-    .reset(reset),
-    .enable(enable_A),
-    .data_in(data_in),
-    .data_out(reg_A_out)
-);
-
-register_8bit reg_B (
-    .clk(div_clock),
-    .reset(reset),
-    .enable(enable_B),
-    .data_in(data_in),
-    .data_out(reg_B_out)
-);
-
-// Instantiate operation modules
-adder alu_add (
-    .A(reg_A_out),
-    .B(reg_B_out),
-    .Y(add_result)
-);
-
-// ... other operation modules
-
-// Output assignments
-assign led_A = reg_A_out;
-assign led_B = reg_B_out;
-
-led[7:0] = led_B;
-led[15:8] = led_A;
-
-clock_div clk_div(
+opermux demux(
+    .data_in(sw[15:8]),
+    .selector(sw[3:0]),
     .clock(div_clock),
-    .reset(enable),
-    .div_clock(div_clock)
+    .reset(reset),
+    .enable(enable),
+    .Y(reg_Y_out),
+    .ALed(led[15:8]),
+    .BLed(led[7:0])
 );
 
-seven_seg_scanner seven_scan(
-    .div_clock(div_clock),
-    .reset(reset),
-    .anode(an[3:0])
-);
-seven_seg_decoder decoderSeg(
-    .anode(an[3:0]),
-    .YInput(Yinput[7:0]),
-    .segs(seg[6:0]),
-    .operation(sw[3:0])
-);
+
+
+
+
+
     
 endmodule

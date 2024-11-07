@@ -1,52 +1,74 @@
 module opermux(
-    input [7:0] data_in,     // Signed 8-bit input data for loading or storing in A
-    input [3:0] selector,           // 4-bit selector for ALU operation
-    input reset,  
-    input enable,                  // Reset signal to zero all registers
-    output reg [7:0] Y,      // Signed 8-bit output for result
-    output reg [7:0] ALed,   // Signed 8-bit LED output for register A
-    output reg [7:0] BLed    // Signed 8-bit LED output for register B
+    input [7:0] data_in,       // Signed 8-bit input data for loading or storing in A
+    input [3:0] selector,      // 4-bit selector for ALU operation
+    input clock,           
+    input reset,               
+    input enable,              // Enable signal for registers
+    output reg [7:0] Y,        // Signed 8-bit output for result
+    output [7:0] ALed,         // LED output for register A
+    output [7:0] BLed          // LED output for register B
 );
 
-    // Internal signed 8-bit registers
-    reg [7:0] A;
-    reg [7:0] B;
-    reg [7:0] tmp;
+reg [7:0] A, B, tmp;          // Internal registers for A and B
+wire [7:0] A_twoscomp;
+wire [7:0] A_add;
+wire [7:0] A_sub;
 
-    wire reg [7:0] A_twoscomp;
-    wire reg [7:0] A_sub;
-    wire reg [7:0] A_add;
+// Connect ALed and BLed directly to internal registers A and B
+assign ALed = A;
+assign BLed = B;
 
-    twos_compliment Atwo(
-        .A(A[7:0]),
-        .Y(A_twoscomp[7:0])
-    );
+// Register instances
+register_8bit regA (
+    .clk(div_clock),
+    .reset(reset),
+    .enable(enable && (selector == 4'b1111)),  // Enable only for Load A
+    .data_in(data_in),    
+    .data_out(A)
+);
 
-    adder add(
-        .A(A[7:0]),
-        .Y(A_add[7:0])
-    );
+register_8bit regB (
+    .clk(div_clock),
+    .reset(reset),
+    .enable(1'b0),             // B is not directly loaded from data_in
+    .data_in(8'b0),            // B only updates through swapping
+    .data_out(B)
+);
 
-    subtract sub(
-        .A(A[7:0]),
-        .Y(A_sub[7:0])
-    );
+// Instantiate additional operation modules
+twos_compliment Atwo (
+    .A(A),
+    .Y(A_twoscomp)
+);
 
-    // Reset all registers to zero
-    always @(posedge reset) begin
-        A <= 8'sd0;
-        B <= 8'sd0;
-        Y <= 8'sd0;
-    end
+adder add (
+    .A(A),
+    .B(B),                    
+    .Y(A_add)
+);
 
-    // ALU operation based on selector
-    always @(enable) begin
+subtract sub (
+    .A(A),
+    .B(B),                   
+    .Y(A_sub)
+);
+
+// Reset all registers to zero
+always @(posedge reset) begin
+    A <= 8'sd0;
+    B <= 8'sd0;
+    Y <= 8'sd0;
+end
+
+// ALU operation based on selector
+always @(posedge div_clock) begin
+    if (enable) begin
         case(selector)
-            4'b0000: Y = A_add// Add          
-            4'b0001: Y = A_sub// Sub                          
-            4'b0010: Y = A <<< 1;      
-            4'b0011: Y = A >>> 1;         
-            4'b0100: begin              
+            4'b0000: Y = A_add;            // Addition          
+            4'b0001: Y = A_sub;            // Subtraction                         
+            4'b0010: Y = A << 1;           // Shift left   
+            4'b0011: Y = A >> 1;           // Shift right   
+            4'b0100: begin                 // Comparison        
                 if (A == B) 
                     Y = 8'sd0;            
                 else if (A > B) 
@@ -54,27 +76,24 @@ module opermux(
                 else 
                     Y = -8'sd1;           
             end
-            4'b0101: Y = A & B;           
-            4'b0110: Y = A | B;          
-            4'b0111: Y = A ^ B;           
-            4'b1000: Y = ~(A & B);        
-            4'b1001: Y = ~(A | B);       
-            4'b1010: Y = ~(A ^ B);        
-            4'b1011: Y = ~A;             
-            4'b1100: Y = A_twos;// Two's Complement (Negate A)
-            4'b1101: A = Y;               
-            4'b1110: begin                
+            4'b0101: Y = A & B;            // Bitwise AND
+            4'b0110: Y = A | B;            // Bitwise OR
+            4'b0111: Y = A ^ B;            // Bitwise XOR
+            4'b1000: Y = ~(A & B);         // Bitwise NAND
+            4'b1001: Y = ~(A | B);         // Bitwise NOR
+            4'b1010: Y = ~(A ^ B);         // Bitwise XNOR
+            4'b1011: Y = ~A;               // Bitwise NOT
+            4'b1100: Y = A_twoscomp;       // Two's Complement (Negate A)
+            4'b1101: A <= Y;               // Store Y in A
+            4'b1110: begin                 // Swap A and B
                 tmp = A;
-                A = B;
-                B = tmp;
+                A <= B;
+                B <= tmp;
             end
-            4'b1111: begin
-                temp = A;
-                A = data_in; 
-                B = temp;
-            end
+            4'b1111: A <= data_in;         // Load data_in into A
+            default: Y = 8'sd0;
         endcase
-        ALed = A;
-        BLed = B;
     end
+end
+
 endmodule

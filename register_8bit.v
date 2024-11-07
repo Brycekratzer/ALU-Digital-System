@@ -1,7 +1,7 @@
 module register_8bit (
     input clk,
     input reset,
-    input enable,          // When to load new value
+    input enable,          
     input [7:0] data_in,   
     output reg [7:0] data_out
 );

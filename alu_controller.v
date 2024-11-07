@@ -6,7 +6,7 @@ module alu_controller (
     output reg enable_A,
     output reg enable_B,
     output reg enable_Y,
-    output reg [3:0] operation_select
+    output reg [3:0] operation_result
 );
     always @(posedge clk or posedge reset) begin
         if (reset) begin
