@@ -62,6 +62,9 @@ adder alu_add (
 assign led_A = reg_A_out;
 assign led_B = reg_B_out;
 
+led[7:0] = led_B;
+led[15:8] = led_A;
+
 clock_div clk_div(
     .clock(div_clock),
     .reset(enable),
