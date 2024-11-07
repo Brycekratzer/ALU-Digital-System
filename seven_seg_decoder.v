@@ -1,7 +1,7 @@
 
 module seven_seg_decoder(
     input [7:0] YInput,
-    input [3:0] operation
+    input [3:0] operation,
     input [3:0] anode,
     output reg [6:0] segs
 );
