@@ -12,7 +12,6 @@ module top(
 // Internal wires
 wire enable = btnC;
 wire reset = btnU;
-wire [7:0] reg_A_out, reg_B_out, reg_Y_out;
 wire [7:0] operation_result;
 wire div_clock;
 
