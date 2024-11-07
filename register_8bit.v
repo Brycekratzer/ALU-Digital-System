@@ -1,15 +1,14 @@
 module register_8bit (
     input clk,
     input reset,
-    input enable,          // Enable signal for loading
-    input [7:0] D,     // Input data
-    output reg [7:0] Q // Output data
+    input enable,          // When to load new value
+    input [7:0] data_in,   
+    output reg [7:0] data_out
 );
-    // On every positive clock edge or reset
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk or posedge reset) begin
         if (reset)
-            Q <= 8'b0;    // Reset to 0
-        else if (enable)      // Only load when enabled
-            Q <= D;       // Load new value
+            data_out <= 8'b0;
+        else if (enable)
+            data_out <= data_in;
     end
 endmodule
