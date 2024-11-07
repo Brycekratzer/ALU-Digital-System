@@ -13,6 +13,7 @@ module top(
 wire [7:0] reg_A_out, reg_B_out, reg_Y_out;
 wire enable_A, enable_B, enable_Y;
 wire [7:0] operation_result;
+wire div_clock;
 
 clock_div clk_div(
     .clock(clk),
@@ -22,7 +23,7 @@ clock_div clk_div(
 
 // Instantiate controller
 alu_controller controller (
-    .clk(clk),
+    .clk(div_clock),
     .reset(reset),
     .btn_execute(btn_execute),
     .operation(operation),
@@ -33,7 +34,7 @@ alu_controller controller (
 
 // Instantiate registers
 register_8bit reg_A (
-    .clk(clk),
+    .clk(div_clock),
     .reset(reset),
     .enable(enable_A),
     .data_in(data_in),
@@ -41,7 +42,7 @@ register_8bit reg_A (
 );
 
 register_8bit reg_B (
-    .clk(clk),
+    .clk(div_clock),
     .reset(reset),
     .enable(enable_B),
     .data_in(data_in),
@@ -62,7 +63,7 @@ assign led_A = reg_A_out;
 assign led_B = reg_B_out;
 
 clock_div clk_div(
-    .clock(clk),
+    .clock(div_clock),
     .reset(enable),
     .div_clock(div_clock)
 );
