@@ -51,3 +51,5 @@ seven_seg_decoder decoder(
 );
 
 endmodule
+
+// Tristan Implementation
