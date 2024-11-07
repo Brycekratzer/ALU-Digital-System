@@ -1,7 +1,7 @@
 module opermux(
     input [7:0] data_in,       // Signed 8-bit input data for loading or storing in A
     input [3:0] selector,      // 4-bit selector for ALU operation
-    input clock,           
+    input clock,           // Clock input for registers and ALU operations
     input reset,               
     input enable,              // Enable signal for registers
     output reg [7:0] Y,        // Signed 8-bit output for result
@@ -9,16 +9,15 @@ module opermux(
     output [7:0] BLed          // LED output for register B
 );
 
-reg [7:0] A, B, tmp;          // Internal registers for A and B
-wire [7:0] A_twoscomp;
-wire [7:0] A_add;
-wire [7:0] A_sub;
+wire [7:0] A, B;               // Define A and B as wires for continuous assignment
+reg [7:0] tmp;                 // Temporary register for swapping
+wire [7:0] A_twoscomp, A_add, A_sub;
 
 // Connect ALed and BLed directly to internal registers A and B
 assign ALed = A;
 assign BLed = B;
 
-// Register instances
+// Register instances (connected to A and B as wires)
 register_8bit regA (
     .clk(div_clock),
     .reset(reset),
@@ -55,8 +54,6 @@ subtract sub (
 
 // Reset all registers to zero
 always @(posedge reset) begin
-    A <= 8'sd0;
-    B <= 8'sd0;
     Y <= 8'sd0;
 end
 
@@ -84,13 +81,12 @@ always @(posedge div_clock) begin
             4'b1010: Y = ~(A ^ B);         // Bitwise XNOR
             4'b1011: Y = ~A;               // Bitwise NOT
             4'b1100: Y = A_twoscomp;       // Two's Complement (Negate A)
-            4'b1101: A <= Y;               // Store Y in A
+            4'b1101: tmp = Y;              // Store Y in A; here, tmp holds the value for further use
             4'b1110: begin                 // Swap A and B
                 tmp = A;
-                A <= B;
-                B <= tmp;
+                Y = B;
             end
-            4'b1111: A <= data_in;         // Load data_in into A
+            4'b1111: Y = data_in;          // Load data_in into A directly
             default: Y = 8'sd0;
         endcase
     end
