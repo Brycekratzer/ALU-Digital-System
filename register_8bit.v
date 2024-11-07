@@ -9,7 +9,7 @@ module register_8bit (
     always @(posedge clk or posedge rst) begin
         if (reset)
             Q <= 8'b0;    // Reset to 0
-        else if (en)      // Only load when enabled
+        else if (enable)      // Only load when enabled
             Q <= D;       // Load new value
     end
 endmodule
