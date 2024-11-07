@@ -49,10 +49,20 @@ register_8bit reg_B (
     .data_out(reg_B_out)
 );
 
+
+register_8bit reg_Y (
+    .clk(clk),
+    .reset(reset),
+    .enable(enable_Y),
+    .data_in(operation_result), // Result from operations
+    .data_out(reg_Y_out)
+);
+
 // Instantiate operation modules
 adder alu_add (
     .A(reg_A_out),
     .B(reg_B_out),
+    
     .Y(add_result)
 );
 
