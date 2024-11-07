@@ -43,8 +43,5 @@ seven_seg_decoder decoderSeg(
     .segs(seg[6:0]),
     .operation(sw[3:0])
 )
-
-// Need to implement the following:
-//  - 
     
 endmodule
