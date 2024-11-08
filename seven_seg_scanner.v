@@ -7,7 +7,7 @@ module seven_seg_scanner(
 
     reg [1:0] count; 
 
-    always @(posedge div_clock or posedge reset) begin
+    always @( reset) begin
         if (reset) begin
             count <= 2'b00;   
         end
