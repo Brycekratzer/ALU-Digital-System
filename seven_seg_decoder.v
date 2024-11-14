@@ -1,7 +1,7 @@
 module seven_seg_decoder(
     input [7:0] YInput,
     input [3:0] operation,
-    input [3:0] anode,
+    input [3:0] an,
     output reg [6:0] segs
 );
 
@@ -15,9 +15,9 @@ module seven_seg_decoder(
         B = YInput[7:4];
     end
 
-    // Select the signal based on the anode value
+    // Select the signal based on the an value
     always @(*) begin
-        case (anode)
+        case (an)
             4'b1110: selected_sig = operation;       // Display Operation Num
             4'b1101: selected_sig = 4'b0000;         // Display B
             4'b1011: selected_sig = A;               // Display Lower 4 bits
